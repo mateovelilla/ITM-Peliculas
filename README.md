@@ -1,4 +1,5 @@
-    PELICULAS  :movie_camera: ► /play trombone
+    
+PELICULAS :movie_camera:
 ## Ejercicio de electiva 2 en sistemas de información
 
 Acabas de empezar tu colección de películas y quieres un sistema para administrarla,
@@ -10,4 +11,7 @@ La ficha técnica de cada película también debe incluir el reparto de actores,
 donde aparecerá su nombre, su nacionalidad y el nombre del personaje que tiene en la película.
 Diseñar una base de datos que se ajuste al requerimiento arriba expuesto, identificando tablas,
 atributos, claves principales y relaciones existentes.
-[logo]: https://raw.githubusercontent.com/mateovelilla/ITM-Peliculas/master/imagenes/diagrama.jpg  "Diagrama"
+
+
+
+![logo](https://raw.githubusercontent.com/mateovelilla/ITM-Peliculas/master/imagenes/diagrama.jpg)
