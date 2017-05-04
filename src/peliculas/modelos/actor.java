@@ -3,6 +3,7 @@ package peliculas.modelos;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import peliculas.dao.*;
 
 public class actor {
     String _nombre,_nacion,_error;
@@ -16,6 +17,8 @@ public class actor {
         this._nombre = nombre;
         this._nacion = nacion;
         this._id = id;
+        conexion conn = new conexion();
+        conn.iniciarConnection();
     }
     
     public Boolean validateNombre(){
