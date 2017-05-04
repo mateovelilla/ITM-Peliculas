@@ -20,5 +20,5 @@ La ficha técnica de cada película también debe incluir el reparto de actores,
 donde aparecerá su nombre, su nacionalidad y el nombre del personaje que tiene en la película.
 Diseñar una base de datos que se ajuste al requerimiento arriba expuesto, identificando tablas,
 atributos, claves principales y relaciones existentes.
-[logo]:https://raw.githubusercontent.com/mateovelilla/ITM-Peliculas/master/imagenes/diagrama.jpg  "Logo Title Text 2" 
+[logo]: https://raw.githubusercontent.com/mateovelilla/ITM-Peliculas/master/imagenes/diagrama.jpg  "Diagrama" 
 
