@@ -1,24 +1,4 @@
-#            |\_|\
-#            | a_a\_______________
-#            | | "]     ITM       - _
-#        ____| '-\___ _____________-
-#       /.----.___.-'\
-#      //        _    \
-#     //   .-. (~v~) /|
-#    |'|  /\:  .--  / \
-#   // |-/  \_/____/\/~|
-#  |/  \ |  []_|_|_] \ |
-#  | \  | \ |___   _\ ]_}
-#  | |  '-' /   '.'  |
-#  | |     /    /|:  |
-#  | |     |   / |:  /\
-#  | |     /  /  |  /  \
-#  | |    |  /  /  |    \
-#  \ |    |/\/  |/|/\    \
-#   \|\ |\|  |  | / /\/\__\
-#    \ \| | /   | |__
-#         / |   |____)
-#         |_/
+    PELICULAS  :movie_camera: ► /play trombone
 ## Ejercicio de electiva 2 en sistemas de información
 
 Acabas de empezar tu colección de películas y quieres un sistema para administrarla,
