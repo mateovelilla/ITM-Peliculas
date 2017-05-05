@@ -15,6 +15,7 @@ public class conexion {
     static String password = "";
     static String db ="peliculas";
     static String dburl = "jdbc:mysql://localhost:" + lport + "/peliculas";
+    public static Session session;
     Connection conexion = null;
     
     public static void conexionSsh()
@@ -22,7 +23,7 @@ public class conexion {
         try
         {
             JSch jsch = new JSch();
-            Session session = jsch.getSession(Suser, Shost, Sport);
+            session = jsch.getSession(Suser, Shost, Sport);
             session.setPassword(Spassword);
             session.setConfig("StrictHostKeyChecking", "no");
             System.out.println("Estableciendo conexion...");
@@ -62,5 +63,16 @@ public class conexion {
     public Connection traerConexion()
     {
         return this.conexion;
+    }
+    public void cerrarConexion()
+    {
+        try{
+            conexion.close();
+            session.disconnect();
+        }catch(Exception e)
+        {
+            System.err.println("Error al cerrar las conexiones");
+            System.err.println(e);
+        }        
     }
 }

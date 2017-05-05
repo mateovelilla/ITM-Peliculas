@@ -6,6 +6,8 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import peliculas.dao.directorDAO;
+import peliculas.dto.directorDTO;
 public class director {
     String _nombre,_nacion,_fechaNacimiento,_error,_format;
     int _id;
@@ -94,22 +96,31 @@ public class director {
     public JSONArray consultar(){
         JSONArray directores = new JSONArray();
         try{
-            JSONObject directOne = new JSONObject();
-            directOne.put("id",1);
-            directOne.put("nombre", "Julian");
-            directOne.put("nacion", "Angola");
-            directOne.put("fechaNacimiento","16/06/1994");
-            JSONObject directTwo = new JSONObject();
-            directTwo.put("id", 2);
-            directTwo.put("nombre", "Mateo");
-            directTwo.put("nacion", "Alemania");
-            directTwo.put("fechaNacimiento","16/06/1992");
-            directores.put(directOne);
-            directores.put(directTwo);
-            
-        }catch(JSONException e)
-        {
+            directorDAO dao = new directorDAO();
+            directorDTO dto = new directorDTO();
+            dto.setNombre(this._nombre.isEmpty()?"":this._nombre);
+            dto.setNacion(this._nacion.isEmpty()?"":this._nacion);
+            if(!this._fechaNacimiento.isEmpty() && this._fechaNacimiento != null)
+            {
+                SimpleDateFormat sdf = new SimpleDateFormat(this._format);
+                dto.setFecha_nacimiento(sdf.parse(this._fechaNacimiento));
+            }   
+            directorDTO[] directoresDTO = dao.buscarDirector(dto);
+            for (int i = 0; i < directoresDTO.length; i++) {
+                JSONObject director = new JSONObject();
+                director.put("id",directoresDTO[i].getId());
+                director.put("nombre", directoresDTO[i].getNombre());
+                director.put("nacion", directoresDTO[i].getNacion());
+                director.put("fechaNacimiento",directoresDTO[i].getFecha_nacimiento());
+                directores.put(director);
+            }
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
+        }
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
         }
         return directores;
     }
