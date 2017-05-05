@@ -49,10 +49,15 @@ public class actor {
     public Boolean Guardar()
     {
         boolean response = false;
+        actorDAO dao = new actorDAO();
         if(this.validateNombre()){
             if(this.validateNacion())
             {
-                return true;
+                actorDTO actor = new actorDTO();
+                actor.setNombre(this._nombre);
+                actor.setNacion(this._nacion);
+                response = dao.crear(actor);
+                
             } else 
             {
                 response = false;
@@ -91,59 +96,62 @@ public class actor {
     }
     public JSONArray traerActoresCombobox()
     {
-                JSONArray directores = new JSONArray();
+        JSONArray actores = new JSONArray();
         try{
-            JSONObject directOne = new JSONObject();
-            directOne.put("id",1);
-            directOne.put("nombre", "Rob marshal");
-            JSONObject directTwo = new JSONObject();
-            directTwo.put("id", 2);
-            directTwo.put("nombre", "Espen Sandberg");
-            directores.put(directOne);
-            directores.put(directTwo);
-        }catch(JSONException e)
-        {
+            actorDAO dao = new actorDAO();
+            actorDTO dto = new actorDTO();
+            dto.setNombre(this._nombre.isEmpty()?"":this._nombre);
+            dto.setNacion(this._nacion.isEmpty()?"":this._nacion);  
+            actorDTO[] actoresDTO = dao.actoresCombobox();
+            for (int i = 0; i < actoresDTO.length; i++) {
+                JSONObject actor = new JSONObject();
+                actor.put("id",actoresDTO[i].getId());
+                actor.put("nombre", actoresDTO[i].getNombre());
+                actores.put(actor);
+            }
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
         }
-        return directores;
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
+        }
+        return actores;
     
     }    
     public Boolean eliminar()
     {
-        return true;
+        actorDAO dao = new actorDAO();
+        return dao.eliminar(this._id);
     }
     
     public JSONObject consultarId()
     {
-        JSONArray directores = new JSONArray();
-        JSONObject director = null;
+        JSONObject actor = new JSONObject();
         try{
-            JSONObject directOne = new JSONObject();
-            directOne.put("id",1);
-            directOne.put("nombre", "Rob marshal");
-            directOne.put("nacion", "Estados unidos");
-            JSONObject directTwo = new JSONObject();
-            directTwo.put("id", 2);
-            directTwo.put("nombre", "Espen Sandberg");
-            directTwo.put("nacion", "Noruega");
-            directores.put(directOne);
-            directores.put(directTwo);
-            for (int i = 0; i < directores.length(); i++)
-            {
-                if (directores.getJSONObject(i).getInt("id")==this._id)
-                {
-                    director =  directores.getJSONObject(i);
-                }
-            }
-            
-        }catch(JSONException e)
-        {
+            actorDAO dao = new actorDAO();
+            actorDTO actorDTO = dao.buscarActorId(this._id);
+            actor.put("id",actorDTO.getId());
+            actor.put("nombre",actorDTO.getNombre());
+            actor.put("nacion", actorDTO.getNacion());
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
         }
-        return director;
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
+        }
+        return actor;
     }
     public Boolean Modificar()
     {
-        return true;
+        actorDTO actor = new actorDTO();
+        actorDAO dao = new actorDAO();
+        actor.setId(this._id);
+        actor.setNombre(this._nombre);
+        actor.setNacion(this._nacion);
+        return dao.modificar(actor);
     }
 }

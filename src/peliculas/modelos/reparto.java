@@ -3,6 +3,8 @@ package peliculas.modelos;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import peliculas.dao.repartoDAO;
+import peliculas.dto.repartoDTO;
 
 public class reparto {
     JSONArray _repartos = new JSONArray();
@@ -45,19 +47,28 @@ public class reparto {
     }
     public JSONArray buscar(int pelicula)
     {
-        JSONArray repartosBuscador = new JSONArray();
+        JSONArray repartos = new JSONArray();
         try{
-            for (int i = 0; i < this._repartos.length(); i++) {
-            if(this._repartos.getJSONObject(i).getInt("peliculaId") == pelicula)
-            {
-                repartosBuscador.put(this._repartos.getJSONObject(i));
+            repartoDAO dao = new repartoDAO();
+            repartoDTO dto = new repartoDTO();
+            dto.setPeliculaId(pelicula); 
+            repartoDTO[] repartosDTO = dao.buscarReparto(dto);
+            for (int i = 0; i < repartosDTO.length; i++) {
+                JSONObject reparto = new JSONObject();
+                reparto.put("id",repartosDTO[i].getId());
+                reparto.put("actor", repartosDTO[i].getActorId());
+                reparto.put("reparto", repartosDTO[i].getReparto());
+                repartos.put(reparto);
             }
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
+            System.err.println(e);
         }
-        }catch(JSONException e)
-        {
-            System.err.println("Error al buscar el reparto:\n"+e);
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
         }
-        return repartosBuscador;
+        return repartos;
     }
     public Boolean eliminar(int id)
     {
