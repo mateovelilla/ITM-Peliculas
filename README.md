@@ -14,7 +14,6 @@
   `---'  |___|  `---'   
 
 </pre> 
-
 PELICULAS :movie_camera:
 ## Ejercicio de electiva 2 en sistemas de información
 
