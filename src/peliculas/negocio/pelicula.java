@@ -1,6 +1,7 @@
 package peliculas.negocio;
 import peliculas.modelos.*;
 import peliculas.vistas.*;
+import peliculas.dto.repartoDTO;
 import org.json.*;
 public class pelicula {
     String response;
@@ -93,7 +94,11 @@ public class pelicula {
     public Boolean guardarReparto(String reparto,int actor,int peliculaId)
     {
         peliculas.modelos.reparto repartoModel = new peliculas.modelos.reparto();
-        if(repartoModel.Guardar(reparto,actor,peliculaId))
+        repartoDTO dto = new repartoDTO();
+        dto.setActorId(actor);
+        dto.setReparto(reparto);
+        dto.setPeliculaId(peliculaId);
+        if(repartoModel.Guardar(dto))
         {
             this.response = "Registro exitoso";
             return true;

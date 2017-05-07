@@ -98,6 +98,7 @@ public class actorDAO {
        }
        return actores;
    }
+   
    public actorDTO buscarActorId(int id)
    {
        actorDTO actor = new actorDTO();       

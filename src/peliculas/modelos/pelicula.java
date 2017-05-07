@@ -10,7 +10,7 @@ import peliculas.dao.peliculaDAO;
 import peliculas.dto.peliculaDTO;
 public class pelicula {
     String _titulo,_nacion,_idioma,_color,_resumen,_observaciones,_error;
-    int _ano,_id;
+    int _ano,_id,_director;
     public String getError() {
         return this._error;
     }
@@ -24,6 +24,7 @@ public class pelicula {
         this._observaciones = observaciones;
         this._ano = ano;
         this._id = id;
+        this._director = director;
     }
     private Boolean validarTitulo ()
     {
@@ -120,6 +121,7 @@ public class pelicula {
     }
     public Boolean Guardar()
     {
+        boolean response = false;
         if(!this.validarTitulo())
             return false;
         if(!this.validarNacion())
@@ -134,7 +136,24 @@ public class pelicula {
             return false;
         if(!this.validarAno())
             return false;
-        return true;
+        try{
+            peliculaDTO pelicula = new peliculaDTO();
+            peliculaDAO dao = new peliculaDAO();
+            pelicula.setDirectorId(this._director);
+            pelicula.setTitulo(this._titulo);
+            pelicula.setAno(this._ano);
+            pelicula.setNacion(this._nacion);
+            pelicula.setIdioma(this._idioma);
+            pelicula.setColor(this._color);
+            pelicula.setResumen(this._resumen);
+            pelicula.setObservacion(this._observaciones);
+            response = dao.crear(pelicula);
+        }catch(Exception e){
+            System.err.println("Error");
+            System.err.println(e);
+        }
+        return response;
+
     }
      public JSONArray consultar()
      {
@@ -176,51 +195,55 @@ public class pelicula {
     }
     public JSONObject consultarId()
     {
-        JSONArray peliculas = new JSONArray();
-        JSONObject pelicula = null;
+        JSONObject pelicula = new JSONObject();
         try{
-            JSONObject peliOne = new JSONObject();
-            peliOne.put("id",1);
-            peliOne.put("titulo", "El aro");
-            peliOne.put("nacion", "Rusia");
-            peliOne.put("color","Negro");
-            peliOne.put("idioma","Español");
-            peliOne.put("resumen","Esta muy miedosa");
-            peliOne.put("observaciones","es mejor verla acompañado");
-            peliOne.put("ano",2015);
-            JSONObject peliTwo = new JSONObject();
-            peliTwo.put("id",2);
-            peliTwo.put("titulo", "pinocho");
-            peliTwo.put("nacion", "inglaterra");
-            peliTwo.put("color","cafe");
-            peliTwo.put("idioma","frances");
-            peliTwo.put("resumen","Para niños");
-            peliTwo.put("observaciones","pinocho es un mentiroso...fin.");
-            peliTwo.put("ano",1992);
-            peliculas.put(peliOne);
-            peliculas.put(peliTwo);
-            
-            for (int i = 0; i < peliculas.length(); i++)
-            {
-                if (peliculas.getJSONObject(i).getInt("id")==this._id)
-                {
-                    pelicula =  peliculas.getJSONObject(i);
-                }
-            }
-            
-        }catch(JSONException e)
-        {
+            peliculaDAO dao = new peliculaDAO();
+            peliculaDTO peliculaDTO = dao.buscarPeliculaId(this._id);
+            pelicula.put("id",peliculaDTO.getId());
+            pelicula.put("directorId",peliculaDTO.getDirectorId());
+            pelicula.put("titulo",peliculaDTO.getTitulo());
+            pelicula.put("ano",peliculaDTO.getAno());
+            pelicula.put("nacion",peliculaDTO.getNacion());
+            pelicula.put("idioma",peliculaDTO.getIdioma());
+            pelicula.put("color",peliculaDTO.getColor());
+            pelicula.put("resumen",peliculaDTO.getResumen());
+            pelicula.put("observaciones",peliculaDTO.getObservacion());
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
+        }
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
         }
         return pelicula;
     }  
     public Boolean eliminar()
     {
-        return true;
+        peliculaDAO dao = new peliculaDAO();
+        return dao.eliminar(this._id);
     }
     public Boolean Modificar()
     {
-        return true;
+        peliculaDTO pelicula = new peliculaDTO();
+        peliculaDAO dao = new peliculaDAO();
+        try{
+            pelicula.setId(this._id);
+            pelicula.setDirectorId(this._director);
+            pelicula.setTitulo(this._titulo);
+            pelicula.setAno(this._ano);
+            pelicula.setNacion(this._nacion);
+            pelicula.setIdioma(this._idioma);
+            pelicula.setColor(this._color);
+            pelicula.setResumen(this._resumen);
+            pelicula.setObservacion(this._observaciones);
+        }catch(Exception e)
+        {
+            System.err.println("Error al crear el formato de fecha");
+            System.err.println(e);
+        }
+
+        return dao.modificar(pelicula);
     }    
     
 }

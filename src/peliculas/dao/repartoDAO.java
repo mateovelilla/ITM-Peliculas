@@ -59,4 +59,83 @@ public class repartoDAO {
        }
        return repartos;
    }
+   public boolean crear(repartoDTO reparto)
+   {
+       boolean response = false;
+       try{
+           con = new conexion();
+           con.iniciarConnection();
+       }catch(Exception e)
+       {
+           System.err.println("Error al iniciar la conexion");
+           System.err.println(e);
+           response = false;
+       }
+       
+       try{
+            PreparedStatement pstm = con.traerConexion().prepareStatement(
+            "insert into reparto (peliculaId," +
+            "actorId,"+
+            "personaje)"+
+            " values(?,?,?)");
+            pstm.setInt(1, reparto.getPeliculaId());
+            pstm.setInt(2, reparto.getActorId());
+            pstm.setString(3, reparto.getReparto());
+            if(pstm.executeUpdate() > 0)
+            {
+                response = true;
+            }else{
+                response = false;
+            }
+            con.cerrarConexion();
+       }catch(SQLException sqE)
+       {
+           System.err.println("Error al insertar");
+           System.err.println(sqE);
+       }
+       catch(Exception e){
+           System.err.println("Error:");
+           System.err.println(e);
+       }
+       return response;
+       
+   }
+   public boolean eliminar(int id)
+   {
+       boolean respuesta = false;
+       int resultado;
+        try{
+            con = new conexion();
+            con.iniciarConnection();
+        }catch(Exception e)
+        {
+            System.err.println("Error al iniciar la conexion");
+            System.err.println(e);
+            respuesta = false;
+        }
+       try{
+           PreparedStatement pstm = con.traerConexion().prepareStatement(
+                   "delete from reparto " + " where id = ?");
+            pstm.setInt(1, id);
+            resultado = pstm.executeUpdate();
+            if(resultado > 0){
+                respuesta = true;
+            }else
+            {
+                respuesta = false;
+            }
+            
+       }catch(SQLException sqlEx)
+       {
+           System.err.println("Error al ejecutar el query");
+           System.err.println(sqlEx);
+       }
+       catch(Exception e)
+       {
+           System.err.println("Error");
+           System.err.println(e);
+       }
+       con.cerrarConexion();
+       return respuesta;
+   }
 }

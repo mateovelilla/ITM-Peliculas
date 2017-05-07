@@ -72,10 +72,12 @@ public class reparto {
     }
     public Boolean eliminar(int id)
     {
-        return true;
+        repartoDAO dao = new repartoDAO();
+        return dao.eliminar(id);
     }
-    public Boolean Guardar(String reparto,int actor,int peliculaId)
+    public Boolean Guardar(repartoDTO reparto)
     {
-        return true;
+        repartoDAO dao = new repartoDAO();
+        return dao.crear(reparto);
     }
 }

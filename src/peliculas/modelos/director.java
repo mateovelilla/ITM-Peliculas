@@ -1,13 +1,16 @@
 
 package peliculas.modelos;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import peliculas.dao.directorDAO;
 import peliculas.dto.directorDTO;
+
 public class director {
     String _nombre,_nacion,_fechaNacimiento,_error,_format;
     int _id;
@@ -75,8 +78,25 @@ public class director {
             {
                 if(this.validateFechaNacimiento())
                 {
-                    // aca se hace la inserción a la base de datos
-                    return true;
+                    try{
+                        directorDTO director = new directorDTO();
+                        directorDAO dao = new directorDAO();
+                        director.setNombre(this._nombre);
+                        DateFormat formatter = new SimpleDateFormat(this._format);
+                        Date date = formatter.parse(this._fechaNacimiento);
+                        director.setFecha_nacimiento(date);
+                        director.setNacion(this._nacion);
+                        response = dao.crear(director);
+                    }catch(ParseException e)
+                    {
+                        System.err.println("Error al crear el formato de fecha");
+                    }
+                    catch(Exception e)
+                    {
+                        System.err.println("Error");
+                        System.err.println(e);
+                    }
+          
                 } else
                 {
                     response = false;
@@ -126,60 +146,73 @@ public class director {
     }
     public JSONArray traerDirectoresCombobox()
     {
-        JSONArray directores = new JSONArray();
+        JSONArray actores = new JSONArray();
         try{
-            JSONObject directOne = new JSONObject();
-            directOne.put("id",1);
-            directOne.put("nombre", "Julian");
-            JSONObject directTwo = new JSONObject();
-            directTwo.put("id", 2);
-            directTwo.put("nombre", "Mateo");
-            directores.put(directOne);
-            directores.put(directTwo);            
-        }catch(JSONException e)
-        {
+            directorDAO dao = new directorDAO();
+            directorDTO dto = new directorDTO();
+            dto.setNombre(this._nombre.isEmpty()?"":this._nombre);
+            dto.setNacion(this._nacion.isEmpty()?"":this._nacion);  
+            directorDTO[] actoresDTO = dao.directoresCombobox();
+            for (int i = 0; i < actoresDTO.length; i++) {
+                JSONObject actor = new JSONObject();
+                actor.put("id",actoresDTO[i].getId());
+                actor.put("nombre", actoresDTO[i].getNombre());
+                actores.put(actor);
+            }
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
         }
-        return directores;
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
+        }
+        return actores;
     }
+    
     public Boolean eliminar()
     {
-        return true;
+        directorDAO dao = new directorDAO();
+        return dao.eliminar(this._id);
     }
     
     public JSONObject consultarId()
     {
-        JSONArray directores = new JSONArray();
-        JSONObject director = null;
+        JSONObject director = new JSONObject();
         try{
-            JSONObject directOne = new JSONObject();
-            directOne.put("id",1);
-            directOne.put("nombre", "Julian");
-            directOne.put("nacion", "Angola");
-            directOne.put("fechaNacimiento","16/06/1994");
-            JSONObject directTwo = new JSONObject();
-            directTwo.put("id", 2);
-            directTwo.put("nombre", "Mateo");
-            directTwo.put("nacion", "Alemania");
-            directTwo.put("fechaNacimiento","16/06/1992");
-            directores.put(directOne);
-            directores.put(directTwo);
-            for (int i = 0; i < directores.length(); i++)
-            {
-                if (directores.getJSONObject(i).getInt("id")==this._id)
-                {
-                    director =  directores.getJSONObject(i);
-                }
-            }
-            
-        }catch(JSONException e)
-        {
+            directorDAO dao = new directorDAO();
+            directorDTO directorDTO = dao.buscarDirectorId(this._id);
+            director.put("id",directorDTO.getId());
+            director.put("nombre",directorDTO.getNombre());
+            director.put("fechaNacimiento",directorDTO.getFecha_nacimiento().toString());
+            director.put("nacion", directorDTO.getNacion());
+        }catch(JSONException e) {
+            System.err.println("Error al format el JSON");
             System.err.println(e);
+        }
+        catch(Exception e) {
+            System.err.println("Existe un error al ejecutar la consulta");
+            System.out.println(e);
         }
         return director;
     }
-    public Boolean Modificar()
+    public boolean Modificar()
     {
-        return true;
+        directorDTO director = new directorDTO();
+        directorDAO dao = new directorDAO();
+        try{
+
+            director.setId(this._id);
+            director.setNombre(this._nombre);
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            director.setFecha_nacimiento(format.parse(this._fechaNacimiento));
+            director.setNacion(this._nacion);
+        }catch(ParseException e)
+        {
+            System.err.println("Error al crear el formato de fecha");
+            System.err.println(e);
+        }
+
+        return dao.modificar(director);
     }
 }
